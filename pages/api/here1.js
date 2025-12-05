@@ -1,7 +1,9 @@
 import {pool} from '../../lib/db';
+import {cors} from'../../lib/cors';
 export default async function handler(req,res){
-   const method = req.method;
-   const action =req.query.action;
+    await cors(req,res);
+    const method = req.method;
+    const action =req.query.action;
     if(method==="POST"){
         if(action === "register"){
             const {name,email} = req.body
@@ -16,10 +18,9 @@ export default async function handler(req,res){
     }
     else  if(method === "GET"){
         
-        const {userid}= req.query;
-         const SELECTQUERY = `SELECT * FROM "user" where id=$1`;
-        const array=[userid];
-        const result = await pool.query(SELECTQUERY,array);
+        //const {userid}= req.query;
+         const SELECTQUERY = `select * FROM "user"`;
+        const result = await pool.query(SELECTQUERY);
        // query(string,array) query(string)
         res.status(200).json({users:result.rows})
     }
